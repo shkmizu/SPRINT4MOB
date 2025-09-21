@@ -1,88 +1,64 @@
-# Project Title
+# ReVeste – Plataforma de Bem-Estar Financeiro
 
-O ReVeste é um aplicativo mobile desenvolvido em React Native com foco em bem-estar financeiro. Ele foi criado para ajudar pessoas a superarem hábitos de apostas e redirecionarem esse dinheiro para investimentos mais inteligentes e metas pessoais. A aplicação oferece um ambiente motivador, com interface moderna e empática, combinando educação financeira, gamificação e suporte psicológico.
+## Introdução
 
-## Getting Started
+O ReVeste é um aplicativo mobile desenvolvido em React Native que tem como propósito ajudar usuários a superarem hábitos de apostas e redirecionarem seus gastos para investimentos mais inteligentes. Ele une elementos de educação financeira, gamificação e suporte psicológico, oferecendo uma jornada acolhedora e motivadora para o usuário.
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+### Pré-requisitos
 
-### Prerequisites
-
-What things you need to install the software and how to install them
+Ao iniciar, o aplicativo apresenta uma tela de login segura implementada com AsyncStorage. O acesso é feito com as credenciais:
 
 ```
-Give examples
+Usuário: fiap2025
+
+Senha: sprintmobile
 ```
 
-### Installing
+Erros como senha incorreta ou usuário inválido são tratados de forma clara e amigável. Uma vez logado, o usuário é direcionado para o Dashboard, onde encontra as principais funcionalidades.
 
-A step by step series of examples that tell you how to get a development env running
+### Funcionalidades
 
-Say what the step will be
+O Dashboard apresenta o valor economizado por não apostar, um Índice de Inteligência Financeira gamificado e gráficos que comparam gastos em apostas com potenciais retornos de investimentos.
 
-```
-Give the example
-```
+O usuário pode registrar apostas informando data, valor e tipo, além de marcar recorrências. Também conta com um simulador de investimentos, que mostra projeções de quanto o dinheiro não apostado poderia render em diferentes prazos (5, 10 e 20 anos) e modalidades de investimento como renda fixa, títulos públicos, ações e ETFs.
 
-And repeat
+Outro recurso é o planejamento de metas, que permite criar objetivos financeiros, acompanhar o progresso em tempo real e receber sugestões sobre quanto economizar mensalmente para alcançar cada meta.
 
-```
-until finished
-```
+O aplicativo envia alertas comportamentais quando identifica padrões de risco, reforça comportamentos positivos e sugere conteúdos educativos. Além disso, há uma comunidade anônima onde os usuários podem compartilhar experiências, e um espaço para agendar consultas com terapeutas financeiros ou psicólogos.
 
-End with an example of getting some data out of the system or using it for a little demo
+No menu de configurações, é possível gerenciar perfil, notificações, privacidade e exclusão da conta.
 
-## Running the tests
+## Instalação e Execução
 
-Explain how to run the automated tests for this system
+Para rodar o projeto localmente, siga os passos abaixo:
 
-### Break down into end to end tests
-
-Explain what these tests test and why
+Instale as dependências:
 
 ```
-Give an example
+npm install
 ```
 
-### And coding style tests
-
-Explain what these tests test and why
-
 ```
-Give an example
+npx install-expo-modules@latest
 ```
 
-## Deployment
+Inicie o aplicativo:
 
-Add additional notes about how to deploy this on a live system
+```
+npx expo start
+```
 
-## Built With
+## Tecnologias Utilizadas
 
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
+* React Native – Framework para desenvolvimento mobile.
+* AsyncStorage – Armazenamento local e gerenciamento de sessão.
+* React Navigation – Navegação entre telas.
+* Expo – Desenvolvimento e build
 
-## Contributing
+## Integrantes
 
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
-
+* **Vitor Shimizu** - *RM550390* - [PurpleBooth](https://github.com/PurpleBooth)
+* **João Pedro Marques** - *RM98307* - [PurpleBooth](https://github.com/PurpleBooth)
+* **André Sóler** - *RM98827* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Fabrizio Maia** - *RM551869* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Victor Asfur** - *RM551684* - [PurpleBooth](https://github.com/PurpleBooth)
