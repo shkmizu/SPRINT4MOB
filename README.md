@@ -57,8 +57,8 @@ npx expo start
 
 ## Integrantes
 
-* **Vitor Shimizu** - *RM550390* - [PurpleBooth](https://github.com/PurpleBooth)
-* **João Pedro Marques** - *RM98307* - [PurpleBooth](https://github.com/PurpleBooth)
-* **André Sóler** - *RM98827* - [PurpleBooth](https://github.com/PurpleBooth)
-* **Fabrizio Maia** - *RM551869* - [PurpleBooth](https://github.com/PurpleBooth)
-* **Victor Asfur** - *RM551684* - [PurpleBooth](https://github.com/PurpleBooth)
+* **Vitor Shimizu** - *RM550390*
+* **João Pedro Marques** - *RM98307* 
+* **André Sóler** - *RM98827* 
+* **Fabrizio Maia** - *RM551869* 
+* **Victor Asfur** - *RM551684*
