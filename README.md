@@ -1,4 +1,4 @@
-# ReVeste – Plataforma de Bem-Estar Financeiro
+<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/0a357c3f-3f72-45ee-b303-ce41dbf25c3a" /># ReVeste – Plataforma de Bem-Estar Financeiro
 
 ## Introdução
 
@@ -47,6 +47,18 @@ Inicie o aplicativo:
 ```
 npx expo start
 ```
+
+## Algumas demonstrações
+
+<img width="1921" height="1039" alt="image" src="https://github.com/user-attachments/assets/5ae3ce52-808f-4f58-86ba-c7e1281d4b54" />
+
+<img width="1918" height="1036" alt="image" src="https://github.com/user-attachments/assets/ca56f540-1974-4b73-aa8f-c3d8a9836de0" />
+
+<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/b9860713-03d6-49eb-b181-e94c96cf55d9" />
+
+<img width="1919" height="1041" alt="image" src="https://github.com/user-attachments/assets/b5e41b14-7d35-4b43-8aa7-e52a020d29e0" />
+
+<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/93a58f4a-acca-462a-b10e-ba185a65adde" />
 
 ## Tecnologias Utilizadas
 
