@@ -1,6 +1,6 @@
 # Project Title
 
-One Paragraph of project description goes here
+O ReVeste é um aplicativo mobile desenvolvido em React Native com foco em bem-estar financeiro. Ele foi criado para ajudar pessoas a superarem hábitos de apostas e redirecionarem esse dinheiro para investimentos mais inteligentes e metas pessoais. A aplicação oferece um ambiente motivador, com interface moderna e empática, combinando educação financeira, gamificação e suporte psicológico.
 
 ## Getting Started
 
