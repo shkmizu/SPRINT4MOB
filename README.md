@@ -1,4 +1,4 @@
-<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/0a357c3f-3f72-45ee-b303-ce41dbf25c3a" /># ReVeste – Plataforma de Bem-Estar Financeiro
+# ReVeste – Plataforma de Bem-Estar Financeiro
 
 ## Introdução
 
