@@ -1,101 +1,19 @@
-📱 ReVeste – Plataforma de Bem-Estar Financeiro
+ReVeste – Plataforma de Bem-Estar Financeiro
 
-O ReVeste é um aplicativo mobile desenvolvido em React Native com foco em bem-estar financeiro, criado para ajudar pessoas a superarem hábitos de apostas e redirecionarem esse dinheiro para investimentos inteligentes e metas pessoais.
+O ReVeste é um aplicativo mobile desenvolvido em React Native com foco em bem-estar financeiro. Ele foi criado para ajudar pessoas a superarem hábitos de apostas e redirecionarem esse dinheiro para investimentos mais inteligentes e metas pessoais. A experiência oferecida pelo app combina motivação, gamificação e educação financeira, tudo em um ambiente amigável e acolhedor.
 
-✨ Funcionalidades Principais
+O fluxo inicial conta com um login seguro utilizando AsyncStorage, onde o usuário deve acessar com o ID fiap2025 e a senha sprintmobile. Caso as credenciais estejam incorretas, o sistema exibe mensagens de erro de forma clara e acessível. Uma vez logado corretamente, o usuário é direcionado para a tela principal.
 
-Login Seguro com AsyncStorage
+No processo de onboarding, o aplicativo apresenta uma mensagem inspiradora de boas-vindas, solicita a aceitação dos termos de privacidade de acordo com a LGPD e disponibiliza um questionário simples para identificar o perfil financeiro e comportamental do usuário. Com base nessas informações, o ReVeste adapta a experiência de uso.
 
-Usuário: fiap2025
+A tela principal exibe o quanto de dinheiro foi economizado ao não apostar, além de um índice gamificado chamado Inteligência Financeira. O usuário também pode visualizar gráficos que comparam os gastos em apostas com os potenciais rendimentos de investimentos, além de acessar de forma rápida os botões para registrar uma aposta ou criar uma meta.
 
-Senha: sprintmobile
+O registro de apostas permite que o usuário informe data, valor e tipo da aposta, com a opção de marcar recorrência. Já o simulador de investimentos mostra projeções de como o valor não apostado poderia render em cinco, dez ou vinte anos, considerando diferentes tipos de ativos, como títulos públicos, renda fixa, ações e ETFs.
 
-Tratamento de erros para credenciais inválidas.
+O módulo de metas e planejamento permite criar objetivos financeiros personalizados, acompanhar o progresso em tempo real e receber sugestões de quanto guardar por mês para atingi-los. O aplicativo também conta com notificações inteligentes que identificam padrões de risco, enviam mensagens de reforço positivo e oferecem conteúdos educativos.
 
-Onboarding & Perfil
+Outro recurso do ReVeste é a comunidade anônima, onde usuários podem compartilhar experiências e se apoiar mutuamente. Além disso, há a possibilidade de agendar consultas com psicólogos ou terapeutas financeiros e acessar materiais de suporte. O menu de configurações inclui a gestão de perfil, notificações, privacidade e exclusão da conta.
 
-Mensagem motivacional de boas-vindas.
+O design do aplicativo foi construído com foco em transmitir calma e motivação, utilizando cores suaves, gradientes discretos, ícones simples e tipografia acessível. Os gráficos são claros e de fácil compreensão, reforçando a proposta de um ambiente confiável e empático.
 
-Consentimento de privacidade (LGPD).
-
-Questionário inicial para identificar perfil financeiro e comportamental.
-
-Dashboard
-
-Dinheiro "economizado" por não apostar.
-
-Índice de Inteligência Financeira (gamificado).
-
-Gráficos comparando apostas vs. potenciais investimentos.
-
-Ações rápidas: Registrar Aposta e Criar Meta.
-
-Registro de Apostas
-
-Cadastro de data, valor e tipo de aposta.
-
-Opção de marcar aposta como recorrente.
-
-Feedback imediato após o registro.
-
-Simulador de Investimentos
-
-Escolha entre renda fixa, títulos públicos, ações e ETFs.
-
-Projeções de crescimento em 5, 10 e 20 anos.
-
-Visualização clara com gráficos comparativos.
-
-Metas e Planejamento
-
-Criação de metas financeiras personalizadas.
-
-Acompanhamento do progresso com porcentagem e prazo.
-
-Sugestões de economia mensal.
-
-Alertas e Intervenções
-
-Notificações para identificar riscos.
-
-Reforço positivo para bons hábitos.
-
-Sugestões de conteúdos educativos.
-
-Comunidade e Apoio
-
-Feed anônimo para troca de experiências.
-
-Agendamento de consultas com psicólogos ou terapeutas financeiros.
-
-Acesso a materiais de suporte.
-
-Configurações
-
-Gerenciamento de perfil.
-
-Preferências de notificação.
-
-Privacidade e exclusão da conta.
-
-🎨 Estilo Visual
-
-Interface calma, empática e encorajadora.
-
-Uso de gradientes suaves, cantos arredondados e ícones intuitivos.
-
-Tipografia acessível e amigável.
-
-Gráficos simples e de fácil leitura.
-
-👨‍💻 Grupo
-
-João Pedro Marques – RM98307
-
-Vitor Shimizu – RM550390
-
-André Sóler – RM98827
-
-Fabrizio Maia – RM551869
-
-Victor Asfur – RM551684
+Este projeto foi desenvolvido pelos seguintes integrantes da equipe: João Pedro Marques (RM98307), Vitor Shimizu (RM550390), André Sóler (RM98827), Fabrizio Maia (RM551869) e Victor Asfur (RM551684).
