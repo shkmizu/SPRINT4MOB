@@ -9,7 +9,7 @@
 
 ## **Introdução**
 
-O ReVeste é um aplicativo mobile desenvolvido em React Native (Expo Router) focado em auxiliar usuários a superarem hábitos de apostas, redirecionando seus gastos para investimentos mais inteligentes. O projeto foi atualizado com um backend robusto para gestão de dados em tempo real.
+O ReVeste é um aplicativo mobile desenvolvido em React Native (Expo Router) focado em auxiliar usuários a superarem hábitos de apostas, redirecionando seus gastos para investimentos mais inteligentes. O projeto foi atualizado com um backend robusto para gestão de dados em tempo real, utilizando a arquitetura Firebase.
 
 ## **Arquitetura de Dados (CRUD)**
 
@@ -63,6 +63,18 @@ Para rodar o projeto localmente, siga os passos abaixo:
    npx expo start \--clear
 
    Escaneie o QR code com o aplicativo Expo Go ou use um simulador.
+
+## **Prints para demonstação**
+
+<img width="1916" height="1044" alt="homescreen" src="https://github.com/user-attachments/assets/f723cf0d-23a4-46d3-abc9-886824ecfbf0" />
+
+<img width="1918" height="1041" alt="goalscreen" src="https://github.com/user-attachments/assets/586904d6-459d-4e45-865b-2b0b3e4ef405" />
+
+<img width="1685" height="1030" alt="image" src="https://github.com/user-attachments/assets/5438c0e6-3761-4fff-b05c-93262c8943e3" />
+
+<img width="1680" height="1028" alt="image" src="https://github.com/user-attachments/assets/5795da19-e69f-4b77-8fb2-8d459d3877e8" />
+
+<img width="1342" height="708" alt="image" src="https://github.com/user-attachments/assets/e8efd6b2-15ff-4613-ad21-8532c58f8e27" />
 
 ## **Tecnologias Utilizadas**
 
