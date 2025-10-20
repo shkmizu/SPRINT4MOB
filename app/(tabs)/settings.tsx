@@ -5,6 +5,9 @@ import { User, Bell, Shield, CircleHelp as HelpCircle, FileText, LogOut, Chevron
 import { router } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// Importação relativa: Caminho corrigido para a pasta raiz
+import { Auth, auth } from '../../services/firebase'; 
+
 export default function Settings() {
   const handleLogout = async () => {
     Alert.alert(
@@ -16,6 +19,13 @@ export default function Settings() {
           text: 'Sair',
           style: 'destructive',
           onPress: async () => {
+            try {
+              // Desloga do Firebase Auth
+              await auth.signOut();
+            } catch (e) {
+              console.error("Erro ao deslogar do Firebase", e);
+            }
+            // Limpa o armazenamento local de qualquer forma
             await AsyncStorage.removeItem('isAuthenticated');
             await AsyncStorage.removeItem('userId');
             router.replace('/(auth)/welcome');
@@ -28,14 +38,44 @@ export default function Settings() {
   const handleDeleteAccount = () => {
     Alert.alert(
       'Excluir Conta',
-      'Esta ação é irreversível. Todos os seus dados serão permanentemente removidos.',
+      'Esta ação é irreversível. Todos os seus dados serão permanentemente removidos. Tem certeza?',
       [
         { text: 'Cancelar', style: 'cancel' },
         {
           text: 'Excluir',
           style: 'destructive',
-          onPress: () => {
-            Alert.alert('Conta excluída', 'Sua conta foi excluída com sucesso.');
+          onPress: async () => {
+            const user = auth.currentUser;
+            const userId = await AsyncStorage.getItem('userId');
+
+            if (!user || !userId) {
+                Alert.alert('Erro', 'Sessão inválida. Por favor, faça login novamente para confirmar a exclusão.');
+                await AsyncStorage.clear();
+                router.replace('/(auth)/welcome');
+                return;
+            }
+
+            try {
+                // Chamada DELETE para o Firebase (exclui dados e o usuário no Auth)
+                await Auth.deleteAccount(user, userId); 
+
+                // Sucesso e navegação para tela de boas-vindas
+                Alert.alert('Sucesso', 'Sua conta e todos os seus dados foram excluídos com sucesso.', [{ 
+                    text: 'OK', 
+                    onPress: () => router.replace('/(auth)/welcome') 
+                }]);
+
+            } catch (error: any) {
+                // Tratamento de erro robusto
+                let errorMessage = 'Falha ao excluir conta. Por favor, tente novamente.';
+                if (error.code === 'auth/requires-recent-login') {
+                    errorMessage = 'Operação sensível: Por favor, faça logout e login novamente imediatamente para confirmar a exclusão.';
+                } else if (error.message) {
+                    errorMessage = error.message;
+                }
+
+                Alert.alert('Erro na Exclusão', errorMessage);
+            }
           }
         }
       ]
@@ -109,7 +149,7 @@ export default function Settings() {
             return (
               <TouchableOpacity
                 key={item.id}
-                style={styles.settingItem}
+                style={[styles.settingItem, item.id === 'terms' && { borderBottomWidth: 0 }]}
                 onPress={item.onPress}
               >
                 <View style={styles.settingIconContainer}>
@@ -153,7 +193,7 @@ export default function Settings() {
             </View>
           </View>
 
-          <View style={styles.notificationItem}>
+          <View style={[styles.notificationItem, { borderBottomWidth: 0 }]}>
             <View style={styles.notificationInfo}>
               <Text style={styles.notificationTitle}>Dicas Educacionais</Text>
               <Text style={styles.notificationDescription}>
@@ -184,7 +224,7 @@ export default function Settings() {
             <ChevronRight size={16} color="#667eea" />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.privacyOption}>
+          <TouchableOpacity style={[styles.privacyOption, { borderBottomWidth: 0 }]}>
             <Text style={styles.privacyOptionText}>Gerenciar Consentimentos</Text>
             <ChevronRight size={16} color="#667eea" />
           </TouchableOpacity>

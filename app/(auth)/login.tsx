@@ -6,9 +6,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { StatusBar } from 'expo-status-bar';
 import { Eye, EyeOff, ArrowLeft } from 'lucide-react-native';
 
+// Importação alterada para um caminho relativo mais seguro
+import { Auth } from '../../services/firebase'; 
+
 export default function Login() {
-  const [userId, setUserId] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('fiap2025@reveste.app');
+  const [password, setPassword] = useState('sprintmobile');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -18,18 +21,27 @@ export default function Login() {
     setError('');
 
     try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // 1. Chamada REAL para o Firebase Auth
+      // Certifique-se de que o usuário 'fiap2025@reveste.app' com a senha 'sprintmobile' está cadastrado no Firebase Auth.
+      await Auth.login(email, password); 
 
-      if (userId === 'fiap2025' && password === 'sprintmobile') {
-        await AsyncStorage.setItem('isAuthenticated', 'true');
-        await AsyncStorage.setItem('userId', userId);
-        router.replace('/(tabs)');
-      } else {
-        setError('ID de usuário ou senha inválidos');
+      // 2. Navegação em caso de sucesso
+      router.replace('/(tabs)');
+
+    } catch (err: any) {
+      // 3. Tratamento de erro do Firebase com feedback claro e informativo
+      let errorMessage = 'Erro desconhecido ao tentar login.';
+      if (err.code === 'auth/invalid-credential' || err.code === 'auth/user-not-found' || err.code === 'auth/wrong-password') {
+        errorMessage = 'Credenciais inválidas. Verifique seu e-mail e senha.';
+      } else if (err.code === 'auth/invalid-email') {
+        errorMessage = 'O formato do e-mail é inválido.';
+      } else if (err.message) {
+        // Para erros que não são de autenticação, mas sim de rede/comunicação
+        errorMessage = err.message;
       }
-    } catch (err) {
-      setError('Erro ao fazer login. Tente novamente.');
+      
+      setError(errorMessage);
+      Alert.alert('Erro no Login', errorMessage); 
     } finally {
       setLoading(false);
     }
@@ -57,13 +69,14 @@ export default function Login() {
 
         <View style={styles.form}>
           <View style={styles.inputContainer}>
-            <Text style={styles.label}>ID do Usuário</Text>
+            <Text style={styles.label}>E-mail</Text> 
             <TextInput
               style={styles.input}
-              value={userId}
-              onChangeText={setUserId}
-              placeholder="Digite seu ID"
+              value={email}
+              onChangeText={setEmail}
+              placeholder="Digite seu e-mail"
               placeholderTextColor="#999"
+              keyboardType="email-address" 
               autoCapitalize="none"
               autoCorrect={false}
             />

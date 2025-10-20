@@ -1,76 +1,74 @@
-# ReVeste – Plataforma de Bem-Estar Financeiro
+# **ReVeste – Plataforma de Bem-Estar Financeiro**
 
-## Introdução
+### **Integrantes do Grupo**
+* **Vitor Shimizu – RM550390** 
+* **Fabrizio Maia - RM551869**
+* **Victor Asfur - RM551684**
+* **João Pedro Marques – RM98307**
+* **André Sóler – RM98827**
 
-O ReVeste é um aplicativo mobile desenvolvido em React Native que tem como propósito ajudar usuários a superarem hábitos de apostas e redirecionarem seus gastos para investimentos mais inteligentes. Ele une elementos de educação financeira, gamificação e suporte psicológico, oferecendo uma jornada acolhedora e motivadora para o usuário.
+## **Introdução**
 
-### Pré-requisitos
+O ReVeste é um aplicativo mobile desenvolvido em React Native (Expo Router) focado em auxiliar usuários a superarem hábitos de apostas, redirecionando seus gastos para investimentos mais inteligentes. O projeto foi atualizado com um backend robusto para gestão de dados em tempo real.
 
-Ao iniciar, o aplicativo apresenta uma tela de login segura implementada com AsyncStorage. O acesso é feito com as credenciais:
+## **Arquitetura de Dados (CRUD)**
 
-```
-Usuário: fiap2025
+Este projeto agora utiliza **Firebase** (Authentication e Cloud Firestore) como backend para um CRUD completo nas funcionalidades centrais:
 
-Senha: sprintmobile
-```
+* **Backend:** Google Firebase (Authentication e Firestore).  
+* **Modelo de Dados:** Dados do usuário, Impulsos (apostas registradas) e Objetivos Financeiros (Goals).  
+* **Resiliência:** Requisições de leitura (Dashboard e Objetivos) implementam um mecanismo de **Retry com Backoff Exponencial** para garantir a recuperação de dados em caso de falhas temporárias de rede, atendendo ao requisito de tratamento de interrupções.
 
-Erros como senha incorreta ou usuário inválido são tratados de forma clara e amigável. Uma vez logado, o usuário é direcionado para o Dashboard, onde encontra as principais funcionalidades.
+### **1\. Funcionalidades CRUD Implementadas**
 
-### Funcionalidades
+| Tela | Operação | Dados Gerenciados | Detalhes |
+| :---- | :---- | :---- | :---- |
+| **Login** | Autenticação | Usuários | Usa Firebase Auth. Credenciais inválidas (e-mail/senha) retornam feedback claro. |
+| **Dashboard** | READ | Consolidados | Leitura resiliente de dados (Retry) com cálculo de métricas (Economia, Potencial de Investimento). |
+| **Modal Impulso** | CREATE | Impulsos | Registro de novas tentativas de aposta no Firestore, convertendo o valor em "economia". |
+| **Objetivos** | CRUD | Metas Financeiras | Listagem (READ) resiliente. Possibilidade de Criar, Editar e Excluir metas (CREATE, UPDATE, DELETE). |
+| **Configurações** | DELETE | Usuário & Dados | Exclusão completa e irreversível da conta e de todos os dados do usuário no Firestore. |
 
-O Dashboard apresenta o valor economizado por não apostar, um Índice de Inteligência Financeira gamificado e gráficos que comparam gastos em apostas com potenciais retornos de investimentos.
+### **2\. Credenciais de Acesso (Firebase Auth)**
 
-O usuário pode registrar apostas informando data, valor e tipo, além de marcar recorrências. Também conta com um simulador de investimentos, que mostra projeções de quanto o dinheiro não apostado poderia render em diferentes prazos (5, 10 e 20 anos) e modalidades de investimento como renda fixa, títulos públicos, ações e ETFs.
+Para acessar a aplicação, o usuário de teste deve ser criado **no Console do Firebase Authentication** com as seguintes credenciais:
 
-Outro recurso é o planejamento de metas, que permite criar objetivos financeiros, acompanhar o progresso em tempo real e receber sugestões sobre quanto economizar mensalmente para alcançar cada meta.
+| Campo | Valor |
+| :---- | :---- |
+| **E-mail** | fiap2025@reveste.app |
+| **Senha** | sprintmobile |
 
-O aplicativo envia alertas comportamentais quando identifica padrões de risco, reforça comportamentos positivos e sugere conteúdos educativos. Além disso, há uma comunidade anônima onde os usuários podem compartilhar experiências, e um espaço para agendar consultas com terapeutas financeiros ou psicólogos.
+### **3\. Pré-requisitos**
 
-No menu de configurações, é possível gerenciar perfil, notificações, privacidade e exclusão da conta.
+* Node.js (LTS recomendado)  
+* npm ou Yarn  
+* Expo Go app (para testar em dispositivo móvel)  
+* Conta Firebase configurada (credenciais em services/firebase.ts)
 
-## Instalação e Execução
+### **4\. Instalação e Execução**
 
 Para rodar o projeto localmente, siga os passos abaixo:
 
-Instale as dependências:
+1. **Instale as dependências (incluindo Firebase):**  
+   npm install  
+   \# ou  
+   yarn install
 
-```
-npm install
-```
+2. **Instale módulos nativos do Expo:**  
+   npx install-expo-modules@latest
 
-```
-npx install-expo-modules@latest
-```
+3. **Inicie o aplicativo (limpando o cache após alterações de módulos):**  
+   npm run dev  
+   \# ou  
+   npx expo start \--clear
 
-Inicie o aplicativo:
+   Escaneie o QR code com o aplicativo Expo Go ou use um simulador.
 
-```
-npx expo start
-```
+## **Tecnologias Utilizadas**
 
-## Algumas demonstrações
-
-<img width="1921" height="1039" alt="image" src="https://github.com/user-attachments/assets/5ae3ce52-808f-4f58-86ba-c7e1281d4b54" />
-
-<img width="1918" height="1036" alt="image" src="https://github.com/user-attachments/assets/ca56f540-1974-4b73-aa8f-c3d8a9836de0" />
-
-<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/b9860713-03d6-49eb-b181-e94c96cf55d9" />
-
-<img width="1919" height="1041" alt="image" src="https://github.com/user-attachments/assets/b5e41b14-7d35-4b43-8aa7-e52a020d29e0" />
-
-<img width="1920" height="1040" alt="image" src="https://github.com/user-attachments/assets/93a58f4a-acca-462a-b10e-ba185a65adde" />
-
-## Tecnologias Utilizadas
-
-* React Native – Framework para desenvolvimento mobile.
-* AsyncStorage – Armazenamento local e gerenciamento de sessão.
-* React Navigation – Navegação entre telas.
-* Expo – Desenvolvimento e build
-
-## Integrantes
-
-* **Vitor Shimizu** - *RM550390*
-* **João Pedro Marques** - *RM98307* 
-* **André Sóler** - *RM98827* 
-* **Fabrizio Maia** - *RM551869* 
-* **Victor Asfur** - *RM551684*
+* **React Native** – Framework para desenvolvimento mobile.  
+* **Expo Router** – Para navegação e estrutura de arquivos.  
+* **Firebase** – Authentication e Cloud Firestore para backend e CRUD.  
+* **AsyncStorage** – Armazenamento local.  
+* **Lucide React Native** – Para ícones.  
+* **Expo** – Desenvolvimento e build.

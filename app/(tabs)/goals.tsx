@@ -1,32 +1,105 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useState, useEffect, useCallback } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Alert, ActivityIndicator } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-import { Plus, Target, TrendingUp, Calendar } from 'lucide-react-native';
+import { Plus, Target, TrendingUp, Calendar, Edit2, Trash2, RefreshCw } from 'lucide-react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Goals() {
-  const goals = [
-    {
-      id: 1,
-      name: 'Reserva de Emergência',
-      targetAmount: 2500.00,
-      currentAmount: 1625.00,
-      progress: 65,
-      timeframe: '8 meses restantes',
-    },
-    {
-      id: 2,
-      name: 'Viagem para Europa',
-      targetAmount: 3200.00,
-      currentAmount: 960.00,
-      progress: 30,
-      timeframe: '12 meses restantes',
-    },
-  ];
+// Importação relativa
+import { Goals, Goal } from '../../services/firebase'; 
+import GoalFormModal from '@/components/GoalFormModal';
 
-  const totalGoalAmount = 5700.00;
-  const totalCurrentAmount = 2585.00;
-  const overallProgress = Math.round((totalCurrentAmount / totalGoalAmount) * 100);
+export default function GoalsScreen() {
+  const [goals, setGoals] = useState<Goal[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [editingGoal, setEditingGoal] = useState<Goal | null>(null);
+  const [hasError, setHasError] = useState(false); // Estado para erro/retry
+
+  // READ: Função para carregar objetivos (com Retry embutido no serviço)
+  const fetchGoals = useCallback(async () => {
+    setIsLoading(true);
+    setHasError(false);
+    try {
+        const userId = await AsyncStorage.getItem('userId');
+        if (!userId) {
+            setGoals([]);
+            return;
+        }
+        
+        const fetchedGoals = await Goals.fetchAll(userId);
+        setGoals(fetchedGoals);
+
+    } catch (error: any) {
+        Alert.alert('Erro de Conexão', `Não foi possível carregar os objetivos: ${error.message}`);
+        setHasError(true);
+    } finally {
+        setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchGoals();
+  }, [fetchGoals]);
+
+  // CREATE: Abre o modal em modo de criação
+  const handleCreateGoal = () => { setEditingGoal(null); setIsModalVisible(true); };
+  
+  // UPDATE: Abre o modal em modo de edição
+  const handleEditGoal = (goal: Goal) => { setEditingGoal(goal); setIsModalVisible(true); };
+
+  // DELETE: Função para excluir objetivo
+  const handleDeleteGoal = (goalId: string, goalName: string) => {
+    Alert.alert(
+        'Excluir Objetivo',
+        `Tem certeza que deseja excluir o objetivo "${goalName}"? Esta ação é irreversível.`,
+        [
+            { text: 'Cancelar', style: 'cancel' },
+            {
+                text: 'Excluir',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await Goals.delete(goalId); // Chamada DELETE para o Firebase
+                        Alert.alert('Sucesso', `Objetivo "${goalName}" excluído.`);
+                        fetchGoals(); // Recarrega a lista
+                    } catch (error: any) {
+                        Alert.alert('Erro', `Falha ao excluir objetivo: ${error.message || 'Verifique sua conexão.'}`);
+                    }
+                }
+            }
+        ]
+    );
+  };
+
+  // Cálculos de progresso
+  const totalGoalAmount = goals.reduce((sum, goal) => sum + goal.targetAmount, 0);
+  const totalCurrentAmount = goals.reduce((sum, goal) => sum + goal.currentAmount, 0);
+  const overallProgress = totalGoalAmount > 0 ? Math.round((totalCurrentAmount / totalGoalAmount) * 100) : 0;
+  
+  // Renderização condicional para o estado de carregamento
+  if (isLoading) {
+    return (
+        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+            <ActivityIndicator size="large" color="#667eea" />
+            <Text style={{ marginTop: 10, color: '#666' }}>Buscando seus objetivos...</Text>
+        </View>
+    );
+  }
+
+  // Renderização condicional para o estado de erro (Interrupção tratada)
+  if (hasError) {
+    return (
+        <View style={[styles.container, { justifyContent: 'center', alignItems: 'center' }]}>
+            <Text style={styles.errorFeedbackText}>Falha ao carregar objetivos.</Text>
+            <Text style={styles.emptySubtext}>Verifique sua conexão de internet.</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={fetchGoals}>
+                <RefreshCw size={20} color="#FFFFFF" />
+                <Text style={styles.retryButtonText}>Tentar Novamente</Text>
+            </TouchableOpacity>
+        </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -63,47 +136,63 @@ export default function Goals() {
         <View style={styles.goalsSection}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Seus Objetivos</Text>
-            <TouchableOpacity style={styles.addButton}>
+            <TouchableOpacity style={styles.addButton} onPress={handleCreateGoal}>
               <Plus size={20} color="#667eea" />
             </TouchableOpacity>
           </View>
 
-          {goals.map((goal) => (
-            <View key={goal.id} style={styles.goalCard}>
-              <View style={styles.goalHeader}>
-                <View style={styles.goalInfo}>
-                  <Text style={styles.goalName}>{goal.name}</Text>
-                  <Text style={styles.goalTimeframe}>{goal.timeframe}</Text>
-                </View>
-                <View style={styles.goalAmount}>
-                  <Text style={styles.goalCurrentAmount}>
-                    R${goal.currentAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                  </Text>
-                  <Text style={styles.goalTargetAmount}>
-                    de R${goal.targetAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-                  </Text>
-                </View>
-              </View>
-
-              <View style={styles.goalProgress}>
-                <View style={styles.goalProgressBar}>
-                  <View style={[styles.goalProgressFill, { width: `${goal.progress}%` }]} />
-                </View>
-                <Text style={styles.goalProgressText}>{goal.progress}%</Text>
-              </View>
-
-              <View style={styles.goalStats}>
-                <View style={styles.goalStat}>
-                  <TrendingUp size={16} color="#51cf66" />
-                  <Text style={styles.goalStatText}>Em progresso</Text>
-                </View>
-                <View style={styles.goalStat}>
-                  <Calendar size={16} color="#999" />
-                  <Text style={styles.goalStatText}>Meta mensal: R$312</Text>
-                </View>
-              </View>
+          {goals.length === 0 ? (
+            <View style={styles.emptyState}>
+                <Text style={styles.emptyText}>Você ainda não tem objetivos cadastrados.</Text>
+                <Text style={styles.emptySubtext}>Comece agora a transformar seus impulsos em metas reais!</Text>
+                <TouchableOpacity style={styles.createGoalButtonSmall} onPress={handleCreateGoal}>
+                    <Text style={styles.createGoalButtonText}>Criar Primeiro Objetivo</Text>
+                </TouchableOpacity>
             </View>
-          ))}
+          ) : (
+            goals.map((goal) => (
+              <View key={goal.id} style={styles.goalCard}>
+                <View style={styles.goalHeader}>
+                  <View style={styles.goalInfo}>
+                    <Text style={styles.goalName}>{goal.name}</Text>
+                    <Text style={styles.goalTimeframe}>{goal.timeframe}</Text>
+                  </View>
+                  <View style={styles.goalAmount}>
+                    <Text style={styles.goalCurrentAmount}>
+                      R${(goal.currentAmount || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </Text>
+                    <Text style={styles.goalTargetAmount}>
+                      de R${goal.targetAmount.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+                    </Text>
+                  </View>
+                </View>
+
+                <View style={styles.goalProgress}>
+                  <View style={styles.goalProgressBar}>
+                    <View style={[styles.goalProgressFill, { width: `${goal.progress || 0}%` }]} />
+                  </View>
+                  <Text style={styles.goalProgressText}>{goal.progress || 0}%</Text>
+                </View>
+
+                <View style={styles.goalActions}>
+                    <View style={styles.goalStat}>
+                      <TrendingUp size={16} color="#51cf66" />
+                      <Text style={styles.goalStatText}>Em progresso</Text>
+                    </View>
+                    <View style={styles.actionButtons}>
+                        <TouchableOpacity style={styles.actionButton} onPress={() => handleEditGoal(goal)}>
+                            <Edit2 size={16} color="#667eea" />
+                            <Text style={styles.actionButtonText}>Editar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.actionButton} onPress={() => handleDeleteGoal(goal.id, goal.name)}>
+                            <Trash2 size={16} color="#ff6b6b" />
+                            <Text style={[styles.actionButtonText, { color: '#ff6b6b' }]}>Excluir</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+              </View>
+            ))
+          )}
 
           {/* Suggestion Card */}
           <View style={styles.suggestionCard}>
@@ -114,11 +203,19 @@ export default function Goals() {
           </View>
         </View>
 
-        <TouchableOpacity style={styles.createGoalButton}>
+        <TouchableOpacity style={styles.createGoalButton} onPress={handleCreateGoal}>
           <Plus size={24} color="#FFFFFF" />
           <Text style={styles.createGoalButtonText}>Criar Novo Objetivo</Text>
         </TouchableOpacity>
       </ScrollView>
+      
+      {/* Modal para Criação/Edição */}
+      <GoalFormModal
+        visible={isModalVisible}
+        onClose={() => setIsModalVisible(false)}
+        initialData={editingGoal}
+        onSave={fetchGoals}
+      />
     </View>
   );
 }
@@ -279,9 +376,13 @@ const styles = StyleSheet.create({
     color: '#51cf66',
     minWidth: 32,
   },
-  goalStats: {
+  goalActions: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
   },
   goalStat: {
     flexDirection: 'row',
@@ -291,6 +392,19 @@ const styles = StyleSheet.create({
   goalStatText: {
     fontSize: 12,
     color: '#666',
+  },
+  actionButtons: {
+    flexDirection: 'row',
+    gap: 16,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  actionButtonText: {
+    fontSize: 14,
+    color: '#667eea',
   },
   suggestionCard: {
     backgroundColor: '#e3f2fd',
@@ -320,8 +434,57 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     marginBottom: 100,
   },
+  createGoalButtonSmall: {
+    backgroundColor: '#667eea',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginTop: 12,
+  },
   createGoalButtonText: {
     fontSize: 18,
+    fontWeight: '600',
+    color: '#FFFFFF',
+  },
+  emptyState: {
+    backgroundColor: '#FFFFFF',
+    marginVertical: 20,
+    padding: 30,
+    borderRadius: 16,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e0e0e0',
+  },
+  emptyText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#333',
+    marginBottom: 8,
+  },
+  emptySubtext: {
+    fontSize: 14,
+    color: '#666',
+    textAlign: 'center',
+  },
+  // NOVOS ESTILOS PARA TRATAMENTO DE ERRO/RETRY
+  errorFeedbackText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#ff6b6b',
+    marginBottom: 8,
+  },
+  retryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    backgroundColor: '#667eea',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    marginTop: 20,
+  },
+  retryButtonText: {
+    fontSize: 16,
     fontWeight: '600',
     color: '#FFFFFF',
   },

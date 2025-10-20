@@ -7,22 +7,30 @@ import {
   TouchableOpacity,
   TextInput,
   ScrollView,
-  Switch
+  Switch,
+  Alert,
+  ActivityIndicator
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { X, Calendar, DollarSign, TriangleAlert as AlertTriangle } from 'lucide-react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+// Importação relativa para o serviço Firebase
+import { Impulses } from '../services/firebase'; 
 
 interface BetRegistrationModalProps {
   visible: boolean;
   onClose: () => void;
+  onRegistered: () => void; // Para atualizar o Dashboard
 }
 
-export default function BetRegistrationModal({ visible, onClose }: BetRegistrationModalProps) {
+export default function BetRegistrationModal({ visible, onClose, onRegistered }: BetRegistrationModalProps) {
   const [amount, setAmount] = useState('');
   const [betType, setBetType] = useState('');
   const [isRecurring, setIsRecurring] = useState(false);
   const [feeling, setFeeling] = useState('');
   const [date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [isSubmitting, setIsSubmitting] = useState(false); // Estado para loading
 
   const betTypes = [
     'Esportes',
@@ -33,10 +41,50 @@ export default function BetRegistrationModal({ visible, onClose }: BetRegistrati
     'Outros'
   ];
 
-  const handleSubmit = () => {
-    // Here you would handle the bet registration
-    console.log({ amount, betType, isRecurring, feeling, date });
-    onClose();
+  const handleSubmit = async () => {
+    // Validação de entrada
+    const parsedAmount = parseFloat(amount.replace(',', '.'));
+    if (!amount || isNaN(parsedAmount) || !betType) {
+        Alert.alert('Atenção', 'O valor deve ser um número válido e o tipo da aposta é obrigatório.');
+        return; 
+    }
+    
+    setIsSubmitting(true);
+    try {
+        const userId = await AsyncStorage.getItem('userId');
+        if (!userId) {
+             Alert.alert('Erro', 'Sessão inválida. Faça login novamente.');
+             onClose();
+             return;
+        }
+
+        const impulseData = {
+            userId,
+            amount: parsedAmount, // Valor formatado para float
+            betType,
+            isRecurring,
+            feeling,
+            date,
+        };
+
+        await Impulses.register(impulseData); // CREATE no Firebase
+        
+        // Limpa o formulário e fecha
+        setAmount('');
+        setBetType('');
+        setIsRecurring(false);
+        setFeeling('');
+        setDate(new Date().toISOString().split('T')[0]);
+        
+        onRegistered(); // Notifica o dashboard para recarregar
+        onClose();
+        Alert.alert('Sucesso', 'Impulso registrado e transformado em potencial de economia!');
+
+    } catch (error: any) {
+        Alert.alert('Erro no Registro', `Falha ao registrar impulso: ${error.message || 'Verifique sua conexão.'}`);
+    } finally {
+        setIsSubmitting(false);
+    }
   };
 
   return (
@@ -155,8 +203,13 @@ export default function BetRegistrationModal({ visible, onClose }: BetRegistrati
           <TouchableOpacity
             style={styles.submitButton}
             onPress={handleSubmit}
+            disabled={isSubmitting}
           >
-            <Text style={styles.submitButtonText}>Registrar e Transformar</Text>
+            {isSubmitting ? (
+                 <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+                <Text style={styles.submitButtonText}>Registrar e Transformar</Text>
+            )}
           </TouchableOpacity>
         </View>
       </ScrollView>
